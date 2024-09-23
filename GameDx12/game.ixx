@@ -18,6 +18,8 @@ namespace game
         std::atomic_int windowCounter = 0;
         std::atomic_int exitCode = 0;
         std::atomic_bool exitOnAllWindowsClosed = true;
+
+        std::wstring assetsPath;
     };
 
     Global* global;
@@ -51,6 +53,14 @@ namespace game
                 PostQuitMessage(global->exitCode);
             }
             return 0;
+        } else
+        {
+            LONG_PTR lp = GetWindowLongPtrW(hWnd, GWLP_USERDATA);
+            if (lp != 0)
+            {
+                auto *win = reinterpret_cast<IWindow*>(lp);
+                return win->OnMessage(hWnd, uMsg, wParam, lParam);
+            }
         }
 
         return DefWindowProcW(hWnd, uMsg, wParam, lParam);
@@ -73,12 +83,37 @@ namespace game
         global->windowClass = RegisterClassExW(&wc);
     }
 
+    inline void GetAssetsPath(_Out_writes_(pathSize) WCHAR* path, UINT pathSize)
+    {
+        if (path == nullptr)
+        {
+            throw std::exception();
+        }
+
+        DWORD size = GetModuleFileName(nullptr, path, pathSize);
+        if (size == 0 || size == pathSize)
+        {
+            // Method failed or path was truncated.
+            throw std::exception();
+        }
+
+        WCHAR* lastSlash = wcsrchr(path, L'\\');
+        if (lastSlash)
+        {
+            *(lastSlash + 1) = L'\0';
+        }
+    }
+
     export void Init(const HINSTANCE hInstance)
     {
         global = new Global;
         global->hInstance = hInstance;
 
         RegisterWC(hInstance);
+
+        wchar_t ap[MAX_PATH];
+        GetAssetsPath(ap, MAX_PATH);
+        global->assetsPath = ap;
     }
 
     export void Terminate()
@@ -97,20 +132,27 @@ namespace game
         return global->hInstance;
     }
 
-    export int EventLoop()
+    export int EventLoop(const std::function<void()>& update)
     {
         MSG msg{};
-        while (GetMessageW(&msg, nullptr, 0, 0) != 0)
+        while (true)
         {
-            TranslateMessage(&msg);
-            DispatchMessageW(&msg);
-        }
+            while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE) != 0)
+            {
+                TranslateMessage(&msg);
+                DispatchMessageW(&msg);
 
-        if (msg.message == WM_QUIT)
-        {
-            return msg.wParam;
-        }
+                if (msg.message == WM_QUIT)
+                {
+                    return msg.wParam;
+                }
+            }
 
-        return 0;
+            update();
+        }
+    }
+
+    export std::wstring GetAssetFullPath(const std::wstring& assetPath) {
+        return global->assetsPath + assetPath;
     }
 }

@@ -24,7 +24,7 @@
     <ClCompile Include="window.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="window_impl.cpp">
+    <ClCompile Include="extra_impl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="graphics.ixx">
@@ -46,5 +46,8 @@
     <ResourceCompile Include="GameDx12.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders.hlsl" />
   </ItemGroup>
 </Project>

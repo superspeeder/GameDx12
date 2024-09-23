@@ -18,7 +18,7 @@ namespace game
         int height = CW_USEDEFAULT;
     };
 
-    export class Window : public I2DSurface
+    export class Window : public IWindow
     {
         explicit Window(const WindowSettings& settings);
 
@@ -57,5 +57,23 @@ namespace game
         }
 
     private:
+
+        std::function<void()> m_OnRender = +[]{};
+
+    public:
+
+        void SetOnRender(const std::function<void()>& f) {
+            m_OnRender = f;
+        }
+
+        LRESULT OnMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) override {
+            if (msg == WM_PAINT)
+            {
+                m_OnRender();
+                return 0;
+            }
+
+            return DefWindowProcW(hwnd, msg, wParam, lParam);
+        }
     };
 }
