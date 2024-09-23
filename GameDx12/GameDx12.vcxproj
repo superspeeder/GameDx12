@@ -114,9 +114,11 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
       <BuildStlModules>true</BuildStlModules>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -132,9 +134,11 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
       <BuildStlModules>true</BuildStlModules>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -146,10 +150,13 @@
   <ItemGroup>
     <ClCompile Include="game.ixx" />
     <ClCompile Include="GameDx12.cpp" />
+    <ClCompile Include="graphics.ixx" />
+    <ClCompile Include="interface.ixx" />
     <ClCompile Include="window.ixx" />
+    <ClCompile Include="window_impl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h" />
+    <ClInclude Include="core.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

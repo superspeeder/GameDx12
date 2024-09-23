@@ -1,9 +1,12 @@
 ﻿module;
-#include "pch.h"
 
-export module game;
+#include "core.h"
+
+export module game.core;
 
 export import std;
+export import game.intfc;
+
 
 namespace game
 {
@@ -92,5 +95,22 @@ namespace game
     export HINSTANCE GetInstanceHandle()
     {
         return global->hInstance;
+    }
+
+    export int EventLoop()
+    {
+        MSG msg{};
+        while (GetMessageW(&msg, nullptr, 0, 0) != 0)
+        {
+            TranslateMessage(&msg);
+            DispatchMessageW(&msg);
+        }
+
+        if (msg.message == WM_QUIT)
+        {
+            return msg.wParam;
+        }
+
+        return 0;
     }
 }

@@ -1,33 +1,19 @@
-#include "pch.h"
+#include "core.h"
 
 
-import game;
+import game.core;
+import game.window;
 
 int Run(int nCmdShow)
 {
-    HWND hwnd = CreateWindowExW(WS_EX_OVERLAPPEDWINDOW, game::WC_NAME, L"Window!", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
-                                CW_USEDEFAULT, 800, 600, nullptr, nullptr, game::GetInstanceHandle(), nullptr);
+    auto window = game::Window::Create(game::WindowSettings{L"Window!", CW_USEDEFAULT, CW_USEDEFAULT, 800, 600});
+    auto window2 = game::Window::Create(game::WindowSettings{L"Window 2!", CW_USEDEFAULT, CW_USEDEFAULT, 800, 600});
 
-    ShowWindow(hwnd, nCmdShow);
+    window->Show(nCmdShow);
+    window2->Show(nCmdShow);
 
-    HWND hwnd2 = CreateWindowExW(WS_EX_OVERLAPPEDWINDOW, game::WC_NAME, L"Window 2!", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
-        CW_USEDEFAULT, 800, 600, nullptr, nullptr, game::GetInstanceHandle(), nullptr);
 
-    ShowWindow(hwnd2, nCmdShow);
-
-    MSG msg{};
-    while (GetMessageW(&msg, nullptr, 0, 0) != 0)
-    {
-        TranslateMessage(&msg);
-        DispatchMessageW(&msg);
-    }
-
-    if (msg.message == WM_QUIT)
-    {
-        return msg.wParam;
-    }
-
-    return 0;
+    return game::EventLoop();
 }
 
 
